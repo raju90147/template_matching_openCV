@@ -1,0 +1,42 @@
+Step - 1: Take the actual image and convert it into a grayscale image.
+
+Step - 2: Select the template as a grayscale image.
+
+Step - 3: Find the location where the accuracy level matches. It is done by template image slide over the actual image.
+
+Step - 4: When the result is greater than the accuracy level, mark that position as detected.
+
+
+Template Matching with Multiple Objects
+In the above example, we searched image for template image that occurred only once in the image. Suppose a particular object that occur multiple times in particular image. In this scenario, we will use the thresholding because cv2.minMaxLoc() won't give all location of template image. Consider the following example.
+
+
+import cv2   
+import numpy as np   
+# Reading the main image   
+img_rgb = cv2.imread(r'C:\Users\DEVANSH SHARMA\mario.png',1)  
+# It is need to be convert it to grayscale   
+img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)   
+# Read the template   
+template = cv2.imread(r'C:\Users\DEVANSH SHARMA\coin1.png',0)   
+# Store width in variable w and height in variable h of template  
+w, h = template.shape[:-1]   
+# Now we perform match operations.   
+res = cv2.matchTemplate(img_gray,template,cv2.TM_CCOEFF_NORMED)   
+# Declare a threshold   
+threshold = 0.8  
+# Store the coordinates of matched region in a numpy array   
+loc = np.where( res >= threshold)   
+# Draw a rectangle around the matched region.   
+for pt in zip(*loc[::-1]):   
+    cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (0,255,255), 2)   
+# Now display the final matched template image   
+cv2.imshow('Detected',img_rgb)
+
+
+Limitation of Templates Matching
+There are few limitations in template matching given as follows:
+
+It is a time-consuming process to calculate the pattern correlation image for medium to large images.
+Pattern occurrence has to preserve the orientation of the reference template image.a
+Template matching doesn't apply on the rotated or scaled version of the template as a change in shape/size/shear etc.
